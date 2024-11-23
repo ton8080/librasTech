@@ -3,9 +3,9 @@ spring:
     name: librasTech
 
   server:
-    port: 8085  # Define a porta do servidor (você pode alterar para outro valor se necessário)
+    port: 8080  # Define a porta do servidor (vocï¿½ pode alterar para outro valor se necessï¿½rio)
     servlet:
-      context-path: /api  # Define o contexto da aplicação (opcional)
+      context-path: /api  # Define o contexto da aplicaï¿½ï¿½o (opcional)
 
   datasource:
     url: jdbc:postgresql://localhost:5432/spring_websocket
@@ -13,7 +13,7 @@ spring:
     password: 123456
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 10  # Define o tamanho máximo do pool de conexões (opcional)
+      maximum-pool-size: 10  # Define o tamanho mï¿½ximo do pool de conexï¿½es (opcional)
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -23,43 +23,9 @@ spring:
     properties:
       hibernate.format_sql: true
 
-  webflux:
-    cors:
-      allowed-origins: "*"  # Permite todas as origens (substitua conforme necessário)
-      allowed-methods:
-        - GET
-        - POST
-        - PUT
-        - DELETE
-      allowed-headers:
-        - "*"
-
   logging:
     level:
-      root: INFO  # Define o nível de log da aplicação, pode ser TRACE, DEBUG, INFO, WARN, ERROR
+      root: INFO  # Define o nï¿½vel de log da aplicaï¿½ï¿½o, pode ser TRACE, DEBUG, INFO, WARN, ERROR
       org:
-        springframework: WARN  # Exemplo de configuração de log específica para Spring Framework
+        springframework: WARN  # Exemplo de configuraï¿½ï¿½o de log especï¿½fica para Spring Framework
 
-  actuator:
-    endpoints:
-      web:
-        exposure:
-          include: "*"  # Expõe todos os endpoints do actuator (opcional, dependendo do seu caso de uso)
-
-  # Segurança (caso queira desabilitar a segurança básica)
-  security:
-    enabled: false
-
-# Configuração do CORS global
-web:
-  cors:
-    mappings:
-      "/**":
-        allowed-origins: "*"  # Permite todas as origens
-        allowed-methods:
-          - GET
-          - POST
-          - PUT
-          - DELETE
-        allowed-headers:
-          - "*"

@@ -10,4 +10,8 @@ public interface VoluntarioRepository extends JpaRepository<VoluntarioEntity, Lo
     Optional<VoluntarioEntity> findByEmailAndSenha(String email, String senha);
 
     List<VoluntarioEntity> findByDisponivelTrue();
+
+    Optional<VoluntarioEntity> findByEmail(String email);
+
+    Optional<VoluntarioEntity> findFirstByDisponivelTrue();
 }

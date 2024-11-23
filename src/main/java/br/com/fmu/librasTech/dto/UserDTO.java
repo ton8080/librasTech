@@ -11,4 +11,9 @@ public class UserDTO {
     private Long ordemId;
     private String nome;
     private boolean buscandoAtendimento;
+
+    public UserDTO(String nome, boolean buscandoAtendimento) {
+        this.nome = nome;
+        this.buscandoAtendimento = buscandoAtendimento;
+    }
 }
