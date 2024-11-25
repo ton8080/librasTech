@@ -16,7 +16,7 @@ public class VoluntarioController {
     @Autowired
     private VoluntarioRepository voluntarioRepository;
 
-    private String url = "https://meet.google.com/jhe-ahhv-mwe";
+    private String url = "https://meet.google.com/wzh-suuk-bzb";
 
     @PostMapping("/cadastro")
     public ResponseEntity<VoluntarioEntity> cadastrarVoluntario(@RequestBody VoluntarioEntity voluntario) {
