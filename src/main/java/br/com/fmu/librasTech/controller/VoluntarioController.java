@@ -4,10 +4,11 @@ import br.com.fmu.librasTech.dto.CallResponseDTO;
 import br.com.fmu.librasTech.entity.VoluntarioEntity;
 import br.com.fmu.librasTech.repository.VoluntarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -16,25 +17,32 @@ public class VoluntarioController {
     @Autowired
     private VoluntarioRepository voluntarioRepository;
 
-    private String url = "https://meet.google.com/wzh-suuk-bzb";
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @Value("$meet.url")
+    private String url;
 
     @PostMapping("/cadastro")
     public ResponseEntity<VoluntarioEntity> cadastrarVoluntario(@RequestBody VoluntarioEntity voluntario) {
+        String senhaCriptografada = passwordEncoder.encode(voluntario.getSenha());
+        voluntario.setSenha(senhaCriptografada);
+
         return ResponseEntity.ok(voluntarioRepository.save(voluntario));
     }
 
     @PostMapping("/login")
     public ResponseEntity<Long> loginVoluntario(@RequestParam String email, @RequestParam String senha) {
-        Optional<VoluntarioEntity> voluntario =  voluntarioRepository.findByEmail(email);
-        if (voluntario.isEmpty()){
+        Optional<VoluntarioEntity> voluntario = voluntarioRepository.findByEmail(email);
+        if (voluntario.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
-            voluntario = voluntarioRepository.findByEmailAndSenha(email, senha);
-            if (voluntario.isEmpty()){
+            if (passwordEncoder.matches(senha, voluntario.get().getSenha())) {
+                return ResponseEntity.ok(voluntario.get().getId());
+            } else {
                 return ResponseEntity.internalServerError().build();
             }
         }
-       return ResponseEntity.ok(voluntario.get().getId());
     }
 
     @PostMapping("/voluntarioEmFila")
@@ -51,7 +59,6 @@ public class VoluntarioController {
         Optional<VoluntarioEntity> voluntarioEntity = voluntarioRepository.findFirstByDisponivelTrue();
 
         if (voluntarioEntity.isPresent()) {
-            // A URL pode ser alterada para a URL dinâmica, se necessário
             CallResponseDTO responseDTO = new CallResponseDTO(voluntarioEntity.get().getId(), url);
             voluntarioEntity.get().setDisponivel(false);
             voluntarioRepository.save(voluntarioEntity.get());
@@ -62,17 +69,12 @@ public class VoluntarioController {
     }
 
     @GetMapping("/voluntariosDisponivel/{id}")
-    public ResponseEntity<Boolean> verificarDisponibilidadeById(@PathVariable Long id){
+    public ResponseEntity<Boolean> verificarDisponibilidadeById(@PathVariable Long id) {
         Optional<VoluntarioEntity> voluntarioEntity = voluntarioRepository.findById(id);
-        if (voluntarioEntity.isPresent()){
-            if (voluntarioEntity.get().isDisponivel()){
-                return ResponseEntity.ok(Boolean.TRUE);
-            } else {
-                return ResponseEntity.ok(Boolean.FALSE);
-            }
+        if (voluntarioEntity.isPresent()) {
+            return ResponseEntity.ok(voluntarioEntity.get().isDisponivel());
         } else {
-          return   ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().build();
         }
-
     }
 }
