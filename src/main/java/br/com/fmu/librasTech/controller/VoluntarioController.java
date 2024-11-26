@@ -20,7 +20,7 @@ public class VoluntarioController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    @Value("$meet.url")
+    @Value("${meet.url}")
     private String url;
 
     @PostMapping("/cadastro")
